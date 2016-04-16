@@ -48,11 +48,9 @@ function printGame() {
 	var i = 0,
 	    j = 0,
 	    totalRows = game.length,
-	    totalColumns;
+	    totalColumns = game[0].length;
 
 	for ( ; i < totalRows; i++) {
-		totalColumns = game[i].length;
-
 		for ( ; j < totalColumns; j++) {
 			// Red player.
 			if (game[i][j] === 1) {
@@ -101,9 +99,123 @@ function showWinner() {
 	document.getElementById('winner-box').style.visibility = 'visible';
 }
 
-function isEndedGame() {
-	return true;
+/* #############################################################################################################
+Validate zone starts winner
+############################################################################################################# */
+function validateDiagonalBottomRight(row, column) {
+	if (row < 3 && column < 4) {
+		if (game[row][column] === currentPlayer && game[row + 1][column + 1] === currentPlayer
+			&& game[row + 2][column + 2] === currentPlayer && game[row + 3][column + 3] === currentPlayer) {
+			console.log(row, column, row + 1, column + 1, row + 2, column + 2, row + 3, column + 3);
+			return true;
+		}
+	}
+
+	return false;
 }
+function validateDiagonalBottomLeft(row, column) {
+	if (row < 3 && column > 2) {
+		if (game[row][column] === currentPlayer && game[row + 1][column - 1] === currentPlayer
+			&& game[row + 2][column - 2] === currentPlayer && game[row + 3][column - 3] === currentPlayer) {
+			console.log(row, column,row + 1, column - 1, row + 2, column - 2, row + 3, column - 3);
+			return true;
+		}
+	}
+
+	return false;
+}
+function validateDiagonalTopRight(row, column) {
+	if (row > 2 && column < 4) {
+		if (game[row][column] === currentPlayer && game[row - 1][column + 1] === currentPlayer
+			&& game[row - 2][column + 2] === currentPlayer && game[row - 3][column + 3] === currentPlayer) {
+			console.log(row, column, row - 1, column + 1, row - 2, column + 2, row - 3, column + 3);
+			return true;
+		}
+	}
+
+	return false;
+}
+function validateDiagonalTopLeft(row, column) {
+	if (row > 2 && column > 2) {
+		if (game[row][column] === currentPlayer && game[row - 1][column - 1] === currentPlayer
+			&& game[row - 2][column - 2] === currentPlayer && game[row - 3][column - 3] === currentPlayer) {
+			console.log(row, column, row - 1, column - 1, row - 3, column - 3, row - 3, column - 3);
+			return true;
+		}
+	}
+
+	return false;
+}
+function validateTop(row, column) {
+	if (row > 2) {
+		if (game[row][column] === currentPlayer && game[row - 1][column] === currentPlayer
+			&& game[row - 2][column] === currentPlayer && game[row - 3][column] === currentPlayer) {
+			console.log(row, column, row - 1, column, row - 2, column, row - 3, column);
+			return true;
+		}
+	}
+
+	return false;
+}
+function validateBottom(row, column) {
+	if (row < 3) {
+		if (game[row][column] === currentPlayer && game[row + 1][column] === currentPlayer
+			&& game[row + 2][column] === currentPlayer && game[row + 3][column] === currentPlayer) {
+			console.log(row, column, row + 1, column, row + 2, column, row + 3, column);
+			return true;
+		}
+	}
+
+	return false;
+}
+function validateLeft(row, column) {
+	if (column > 2) {
+		if (game[row][column] === currentPlayer && game[row][column - 1] === currentPlayer
+			&& game[row][column - 2] === currentPlayer && game[row][column - 3] === currentPlayer) {
+			console.log(row, column, row, column - 1, row, column - 2, row, column - 3);
+			return true;
+		}
+	}
+
+	return false;
+}
+function validateRight(row, column) {
+	if (column < 4) {
+		if (game[row][column] === currentPlayer && game[row][column + 1] === currentPlayer
+			&& game[row][column + 2] === currentPlayer && game[row][column + 3] === currentPlayer) {
+			console.log(game[row][column], game[row][column + 1], game[row][column + 2], game[row][column + 3]);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function isEndedGame() {
+	var i = 0,
+	    j = 0,
+	    totalRows = game.length,
+	    totalColumns = game[0].length;
+
+	for ( ; i < totalRows; i++) {
+		for ( ; j < totalColumns; j++) {
+			if (game[i][j] > 0) {
+				if (validateTop(i, j) || validateRight(i, j) || validateBottom(i, j) || validateLeft(i, j)
+					|| validateDiagonalTopLeft(i, j) || validateDiagonalTopRight(i, j)
+					|| validateDiagonalBottomLeft(i, j) || validateDiagonalBottomRight(i, j)) {
+					return true;
+				}
+			}
+		}
+
+		j = 0;	
+	}
+
+	return false;
+}
+/* #############################################################################################################
+Validate zone ends winner
+############################################################################################################# */
 
 function makeMovement(row, column) {
 	game[row][column] = currentPlayer;
